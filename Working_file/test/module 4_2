@@ -1,0 +1,102 @@
+let datajason = {
+    "title": "t-Shirt with love, vote 1",
+    "coupon_price": 10000000,
+    "old_price":    1000000000,
+    "new_price":    10000000,
+    "address":      "Universe",
+    "description":  "I want you to make love, not war, I know you've heard it before",
+    "image":        "http://bit.ly" 
+}
+let dappAddress = "3MrRNhEfNcfPSaGdGk1Lh1Ltr7qfWVd8sQZ"
+let accountSupplierSeed = "draft design like fluid grass gossip reform excite gadget mandate airport exhaust"
+it('add item', async function() {
+    let ts = invokeScript({
+        dApp: dappAddress,
+        call:{
+            function:"addItem",
+            args:[
+                {type:"string",  value: datajason.title},
+                {type:"integer", value: datajason.coupon_price },
+                {type:"string", value: JSON.stringify(datajason)}
+            ]},
+             payment: []
+        }, accountSupplierSeed)
+    let tx= await broadcast(ts)
+    await waitForTx(tx.id)
+})
+let accountCustomerSeed = "envelope pulse tent dolphin cart fashion decrease toe visual crouch exclude need"
+it('purchase item', async function() {
+    let item = "item_YeE+wl+OGK9j3r4RHOmO4dBibf8YUeS7/lVbALwdlHo="
+    let ts = invokeScript({
+        dApp: dappAddress,
+        call:{
+            function:"purchase",
+            args:[
+                { type:"string", value: item}
+            ]},
+            payment: [{amount: datajason.coupon_price, assetId:null}]
+        }, accountCustomerSeed)
+    let tx= await broadcast(ts)
+    await waitForTx(tx.id)
+    
+})
+it('withdraw fund', async function() {
+    let ts = invokeScript({
+        dApp: dappAddress,
+        call:{
+            function:"withdraw",
+            args:[]        },
+            payment: []
+       },   accountSupplierSeed)
+    let tx= await broadcast(ts)
+    await waitForTx(tx.id)       
+    
+})
+let commits = ["G8ZMEiXEGefpEdgEFN5mYr6oEEABJrtcBBLkZf6Ujmcq",
+"Bf2yysmAoroXAzVidK1wxuVYpRGLy1nWe6cNAGXBf5Hi",
+"ACHSFMGY7bp3aHryCLYc499XvojeGrgBp59zSvwgLnkQ"]
+let reveals = ["delisted", "featured", "featured"]
+let salts = ["random1", "random2", "random3"]
+let accountDappSeed = "blossom whale current real exile angry blind bronze slogan twin toe buddy"
+let seeds = [accountDappSeed,accountCustomerSeed,accountSupplierSeed]
+
+it("vote commit", async function() {
+    let item = "item_YeE+wl+OGK9j3r4RHOmO4dBibf8YUeS7/lVbALwdlHo="
+    let user = 3
+    let ts = invokeScript({
+        dApp: dappAddress,
+        call:{
+            function:"voteCommit",
+            args:[
+                {type:"string",value: item},
+                {type:"string",value: commits[user]}
+            ]},
+            payment:[]
+    }, seeds[user])
+    let tx= await broadcast(ts)
+    await waitForTx(tx.id)
+
+} )
+
+it('vote reveal', async function() {
+    let item = "item_YeE+wl+OGK9j3r4RHOmO4dBibf8YUeS7/lVbALwdlHo="
+    let user = 0
+    let ts = invokeScript({
+        dApp: dappAddress,
+        call:{
+            function:"voteReveal",
+            args:[
+                {type:"string",value: item},
+                {type:"string",value: reveals[user]},
+                {type:"string",value: salts[user]}
+            ]},
+            payment:[]
+    }, seeds[user])
+    let tx= await broadcast(ts)
+    await waitForTx(tx.id)
+} )
+it("umbra ", async function() {
+    let user = 3
+    console.log(JSON.stringify(reveals[user]))
+ //   console.log(salts[user])
+})

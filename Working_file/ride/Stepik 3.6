@@ -1,0 +1,27 @@
+{-# STDLIB_VERSION 3 #-}
+{-# CONTENT_TYPE DAPP #-}
+{-# SCRIPT_TYPE ACCOUNT #-}
+
+# let alicePubKey  = base58'BJFweCYvhCSBeqaf4UQxwYJGR8EXKgKDS4efvVVp2e1Q'
+# swap from Account empty , where set script multusig
+let alicePubKey  = base58'2iikmFa1qyioGo48N7QYYkD5QmckAErTXAZ89gEyqZxj'
+let bobPubKey    = base58'3p9CaZqfBfrWwWgz9ceAG5iTicFKgHtdJhWQbnr53zau'
+let cooperPubKey  = base58'BJFweCYvhCSBeqaf4UQxwYJGR8EXKgKDS4efvVVp2e1Q'
+# let cooperPubKey = base58'2iikmFa1qyioGo48N7QYYkD5QmckAErTXAZ89gEyqZxj'
+
+@Verifier(tx)
+func verify() = {
+#define public keys
+
+
+#check whoever provided the valid proof
+let aliceSigned  = if(sigVerify(tx.bodyBytes, tx.proofs[0], alicePubKey  )) then 1 else 0
+let bobSigned    = if(sigVerify(tx.bodyBytes, tx.proofs[1], bobPubKey    )) then 1 else 0
+let cooperSigned = if(sigVerify(tx.bodyBytes, tx.proofs[2], cooperPubKey )) then 1 else 0
+
+#sum up every valid proof to get at least 2
+match tx { 
+    case _ => aliceSigned + bobSigned + cooperSigned >= 2
+}
+
+}

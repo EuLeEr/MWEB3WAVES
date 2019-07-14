@@ -1,0 +1,45 @@
+ let accountCooperAddress = "3N3ZoYWwoAYeFX6QFkarm2hmQdCoDRbz9qw"
+ let accountCooperSeed = "tomato valid border tuition parrot throw snack menu increase leg horror output tail enemy lucky"
+ it('dapp invoke purchase', async function(){
+     let txObjectSignedCooper = invokeScript({
+         dApp: accountCooperAddress,
+         call:{
+             function:"purchase",
+             arg:[]},
+             payment: [{amount:500000,asset:null}]
+         }, accountCooperSeed)
+
+         let tx = await broadcast(txObjectSignedCooper)
+         await waitForTx(tx.id)
+         console.log(JSON.stringify(tx))
+     })
+ 
+ 
+ 
+ it('data transaction preparation for 3.6', async function() {
+
+    let AccountBobSeed = "envelope pulse tent dolphin cart fashion decrease toe visual crouch exclude need"
+    let tx = await broadcast(data({data: [{key:"item_A_coupon_price", value:500000}], fee:500000},  AccountBobSeed  ))
+
+    await waitForTx(tx.id);
+ })
+
+//let accountAliceSeed = "tomato valid border tuition parrot throw snack menu increase leg horror output tail enemy lucky"
+// Now this  Account empty
+let accountAliceSeed = "fog crash exact float aspect bunker funny hover reunion claw prefer ensure"
+let accountBobSeed = "mandate stay physical hero grow angry error asthma six tiger dragon logic scout family where"
+let accountBobAddress = "3N7PG73qejLG9GZMycZq6FBosPiR6v9UE7M"
+
+
+it('multisig transfer', async function() {
+    let txAlice = transfer({amount: 100000, recipient: accountBobAddress, fee: 500000 }, accountAliceSeed)
+    let txAliceBob = transfer(txAlice, accountBobSeed)
+
+    let tx = await broadcast(txAliceBob)
+    await waitForTx(tx.id)
+
+    console.log(JSON.stringify(tx))
+})
+
+
+

@@ -1,0 +1,32 @@
+const AccountASeed = "tomato valid border tuition parrot throw snack menu increase leg horror output tail enemy lucky"
+const AccountBAddress = "3N7PG73qejLG9GZMycZq6FBosPiR6v9UE7M"
+
+console.log("address with waves:");
+console.log( address(AccountASeed));
+
+it('transfer', async function() {
+    let tx = await broadcast(transfer({amount: 500000000, recipient: AccountBAddress}, AccountASeed))
+    await waitForTx(tx.id)
+    console.log(JSON.stringify(tx));
+} )
+
+it('data transaction', async function() {
+    let aboutObject = {
+        "name": "Eugene Ermolov",
+        "occupation": "Freelance & remote employe"
+    }
+    let aboutString = JSON.stringify(aboutObject)
+//    let tx = await broadcast(data({data: [{key:"web3-online-course-user-data", value:aboutString}]}, AccountASeed ))
+    let tx = await broadcast(data({data: [{key:"item_A_coupon_price", value:"5000000"}]}, AccountASeed ))
+
+    await waitForTx(tx.id);
+})
+
+let AccountBSeed = "mandate stay physical hero grow angry error asthma six tiger dragon logic scout family where"
+
+it('transfer transaction from smart account B with blocked transaction to account A (1 waves)', async function() {
+   let tx = await broadcast(transfer({amount: 100000000, recipient: address(AccountASeed)}, AccountBSeed))
+    await waitForTx(tx.id)
+    console.log(JSON.stringify(tx));
+ })
+

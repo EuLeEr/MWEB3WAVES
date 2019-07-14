@@ -1,0 +1,10 @@
+const AccountASeed = "tomato valid border tuition parrot throw snack menu increase leg horror output tail enemy lucky"
+const AccountBAddress = "3N7PG73qejLG9GZMycZq6FBosPiR6v9UE7M"
+
+let AccountBSeed = "mandate stay physical hero grow angry error asthma six tiger dragon logic scout family where"
+
+it('transfer transaction from smart account B with blocked transaction to account A (1 waves)', async function() {
+   let tx = await broadcast(transfer({amount: 100000000, recipient: address(AccountASeed)}, AccountBSeed))
+    await waitForTx(tx.id)
+    console.log(JSON.stringify(tx));
+ })

@@ -1,0 +1,11 @@
+const AccountASeed = "mandate stay physical hero grow angry error asthma six tiger dragon logic scout family where"
+const AccountBAddress = "3N3ZoYWwoAYeFX6QFkarm2hmQdCoDRbz9qw"
+
+console.log("address with waves:");
+console.log( address(AccountASeed));
+
+it('transfer', async function() {
+    let tx = await broadcast(transfer({amount: 1100000000, recipient: AccountBAddress}, AccountASeed))
+    await waitForTx(tx.id) 
+    console.log(JSON.stringify(tx));
+} )

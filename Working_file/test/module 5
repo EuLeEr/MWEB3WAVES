@@ -1,0 +1,95 @@
+const seed = "install woman deer catch happy manage certain loud green camp disease way"
+console.log("issuer address : " + address(seed))
+
+it("custom currency token ", async function() {
+    const tokenParamsCustomCurrency = {
+        name: "ErEuAn",
+        quantity: 100000,
+        decimals: 2,
+        reissuable: false,
+        descption: "Family token for shcool cafe"
+    };
+    const signedIssueTx = issue( tokenParamsCustomCurrency, seed);
+    let tx= await broadcast(signedIssueTx)
+    await waitForTx(tx.id)
+    console.log("tx/token id " + tx.id);
+
+} )
+
+it("custom indivisible token ", async function() {
+    const tokenParamsCustomCurrency = {
+        name: "Coupon bearch",
+        quantity: 100,
+        decimals: 0 ,
+        reissuable: true,
+        descption: "Coupon for bearch sail "
+    };
+    const signedIssueTx = issue( tokenParamsCustomCurrency, seed);
+    let tx= await broadcast(signedIssueTx)
+    await waitForTx(tx.id)
+    console.log("tx/token id " + tx.id);
+ 
+     
+} )
+
+it("reissue custom  token ", async function() {
+    //console.log('7nGhdxBzxWr2CH9fxou2MWRTiiygzKRwvUC7FL9WBZpn')
+    const tokenParamsCustomCurrency = {
+        quantity: 10,
+        assetId: 'J4uYaszzBAU1n8W7eMkrRXKcKhvQuTYXgzwLboiUHX8N' ,
+        reissuable: true,
+
+    };
+    const signedIssueTx = reissue( tokenParamsCustomCurrency, seed);
+    let tx= await broadcast(signedIssueTx)
+    await waitForTx(tx.id)
+    console.log("tx/token id " + tx.id);
+     
+} )
+
+it("burn custom  token ", async function() {
+   
+    const tokenParamsCustomCurrency = {
+        quantity: 1,
+        assetId: 'J4uYaszzBAU1n8W7eMkrRXKcKhvQuTYXgzwLboiUHX8N' ,
+
+
+    };
+    const signedIssueTx = burn( tokenParamsCustomCurrency, seed);
+    let tx= await broadcast(signedIssueTx)
+    await waitForTx(tx.id)
+    console.log("tx/token id " + tx.id);
+     
+} )
+let dappAddress = "3N3ZoYWwoAYeFX6QFkarm2hmQdCoDRbz9qw"
+it("deposit token  ", async function() {
+    let ts = invokeScript({
+        dApp: dappAddress,
+        call:{
+            function:"deposit",
+            args:[]},
+            payment:[{amount: 3, assetId: 'J4uYaszzBAU1n8W7eMkrRXKcKhvQuTYXgzwLboiUHX8N' }]
+    }, seed)
+
+    let tx= await broadcast(ts)
+    await waitForTx(tx.id)
+ //   console.log("tx/token id " + tx.id);
+     
+} )
+it("withdraw token  ", async function() {
+    let ts = invokeScript({
+        dApp: dappAddress,
+        call:{
+            function:"withdraw",
+            args:[
+                {type:"integer",value: 11}
+
+            ]},
+            payment:[]
+    }, seed)
+
+    let tx= await broadcast(ts)
+    await waitForTx(tx.id)
+    console.log("tx/token id " + tx.id);
+     
+} )

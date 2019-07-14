@@ -1,0 +1,35 @@
+{-# STDLIB_VERSION 3 #-}
+{-# CONTENT_TYPE DAPP #-}
+{-# SCRIPT_TYPE ACCOUNT #-}
+
+# let alicePubKey  = base58'BJFweCYvhCSBeqaf4UQxwYJGR8EXKgKDS4efvVVp2e1Q'
+# swap from Account empty , where set script multusig
+let alicePubKey  = base58'2iikmFa1qyioGo48N7QYYkD5QmckAErTXAZ89gEyqZxj'
+let bobPubKey    = base58'3p9CaZqfBfrWwWgz9ceAG5iTicFKgHtdJhWQbnr53zau'
+let cooperPubKey  = base58'BJFweCYvhCSBeqaf4UQxwYJGR8EXKgKDS4efvVVp2e1Q'
+# let cooperPubKey = base58'2iikmFa1qyioGo48N7QYYkD5QmckAErTXAZ89gEyqZxj'
+
+@Verifier(tx)
+func verify() = {
+#define public keys
+
+
+#check whoever provided the valid proof
+let alice1  = sigVerify(tx.bodyBytes, tx.proofs[0], alicePubKey  ) 
+let alice2  = sigVerify(tx.bodyBytes, tx.proofs[1], alicePubKey  ) 
+let alice3  = sigVerify(tx.bodyBytes, tx.proofs[2], alicePubKey  ) 
+let bob1   = sigVerify(tx.bodyBytes, tx.proofs[0], bobPubKey    )
+let bob2   = sigVerify(tx.bodyBytes, tx.proofs[1], bobPubKey    )
+let bob3   = sigVerify(tx.bodyBytes, tx.proofs[2], bobPubKey    )
+let cooper1 = sigVerify(tx.bodyBytes, tx.proofs[0], cooperPubKey )
+let cooper2 = sigVerify(tx.bodyBytes, tx.proofs[1], cooperPubKey )
+let cooper3 = sigVerify(tx.bodyBytes, tx.proofs[2], cooperPubKey )
+let AliceAndBob = (alice1 && bob2) || (alice1 && bob3) || (alice2 && bob1) || (alice2 && bob3) || (alice3 && bob1) || (alice3 && bob2)
+let AliceAndCooper = (alice1 && cooper2) || (alice1 && cooper3) || (alice2 && cooper1) || (alice2 && cooper3) || (alice3 && cooper1) || (alice3 && cooper2)
+let BobAndCooper = (bob1 && cooper2) || (bob1 && cooper3) || (bob2 && cooper1) || (bob2 && cooper3) || (bob3 && cooper1) || (bob3 && cooper2)
+#sum up every valid proof to get at least 2
+match tx { 
+    case _ => AliceAndBob || AliceAndCooper || BobAndCooper
+}
+
+}

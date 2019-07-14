@@ -1,0 +1,17 @@
+ // - address contact 
+ let accountCooperAddress = "3N1usCuk5ZxVKH7iBSskaD4X7DxZQm3Rek3"
+// well - here must be seed buyer
+ let accountCooperSeed = "draft design like fluid grass gossip reform excite gadget mandate airport exhaust"
+ it('dapp invoke purchase', async function(){
+     let txObjectSignedCooper = invokeScript({
+         dApp: accountCooperAddress,
+         call:{
+             function:"purchase",
+             args:[{type:"string",value:"B"}]},
+             payment: [{amount:500000,assetId:null}]
+         }, accountCooperSeed)
+
+         let tx = await broadcast(txObjectSignedCooper)
+         await waitForTx(tx.id)
+         console.log(JSON.stringify(tx))
+     })
